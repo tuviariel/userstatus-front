@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../../config";
 const API_URL = config["API_URL"];
 export const Welcome = () => {
-    const [login, setLogin] = useState(true);
+    const [login, setLogin] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
