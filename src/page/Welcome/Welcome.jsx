@@ -1,4 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
+import config from "../../config";
+const API_URL = config["API_URL"];
 export const Welcome = () => {
     const [login, setLogin] = useState(true);
     const [userName, setUserName] = useState("");
@@ -7,6 +10,9 @@ export const Welcome = () => {
     const [message, setMessage] = useState("");
     const sendRegister = () => {
         setMessage("in send register");
+        axios.post(`${API_URL}/login`, { userName: userName, password: password }).then((res) => {
+            console.log(res);
+        });
     };
     const sendLogin = () => {
         setMessage("in send login");
