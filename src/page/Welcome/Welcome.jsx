@@ -9,9 +9,14 @@ export const Welcome = () => {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [message, setMessage] = useState("");
     const sendRegister = () => {
-        setMessage("in send register");
         axios.post(`${API_URL}/login`, { userName: userName, password: password }).then((res) => {
             console.log(res);
+            if (res.status === 200) {
+                //navigate to main page
+                setMessage(res.data.message);
+            } else {
+                setMessage(res.data.message);
+            }
         });
     };
     const sendLogin = () => {
