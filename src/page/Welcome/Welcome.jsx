@@ -1,8 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 import config from "../../config";
+import { useNavigate } from "react-router";
 const API_URL = config["API_URL"];
 export const Welcome = () => {
+    const navigate = useNavigate();
     const [login, setLogin] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -14,7 +16,7 @@ export const Welcome = () => {
             password: password,
         });
         if (res.status === 200) {
-            //navigate to main page
+            navigate("/main");
             setMessage(res.data.message);
         } else {
             setMessage(res.data.message);
@@ -26,7 +28,7 @@ export const Welcome = () => {
             password: password,
         });
         if (res.status === 200) {
-            //navigate to main page
+            navigate("/main");
             setMessage(res.data.message);
         } else {
             setMessage(res.data.message);
