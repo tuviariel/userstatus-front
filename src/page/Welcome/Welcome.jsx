@@ -8,31 +8,48 @@ export const Welcome = () => {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [message, setMessage] = useState("");
-    const sendRegister = () => {
-        axios.post(`${API_URL}/login`, { userName: userName, password: password }).then((res) => {
-            console.log(res);
-            if (res.status === 200) {
-                //navigate to main page
-                setMessage(res.data.message);
-            } else {
-                setMessage(res.data.message);
-            }
+    const sendRegister = async () => {
+        const res = await axios.post(`${API_URL}/register`, {
+            userName: userName,
+            password: password,
         });
+        if (res.status === 200) {
+            //navigate to main page
+            setMessage(res.data.message);
+        } else {
+            setMessage(res.data.message);
+        }
     };
-    const sendLogin = () => {
-        setMessage("in send login");
+    const sendLogin = async () => {
+        const res = await axios.post(`${API_URL}/login`, {
+            userName: userName,
+            password: password,
+        });
+        if (res.status === 200) {
+            //navigate to main page
+            setMessage(res.data.message);
+        } else {
+            setMessage(res.data.message);
+        }
     };
     return (
         <div className="App-header">
-            <h2
-                onClick={() => {
-                    setLogin(!login);
-                    setMessage("");
-                }}
-                className="">
-                Welcome
-            </h2>
+            <h2 className="">Welcome</h2>
             <h3>{login ? "Login" : "Register"}</h3>
+            <h5>
+                {login ? "Haven't registered yet" : "All ready registered"}?...
+                <span
+                    className=""
+                    onClick={() => {
+                        setLogin((login) => {
+                            return !login;
+                        });
+                        setMessage("");
+                    }}>
+                    {login ? " Register" : " Login"}
+                </span>
+                .
+            </h5>
             <input
                 type="text"
                 onChange={(e) => {
