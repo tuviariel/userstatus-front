@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../../config";
 import { useNavigate } from "react-router";
@@ -10,6 +10,23 @@ export const Welcome = () => {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [message, setMessage] = useState("");
+    useEffect(() => {
+        console.log("in effect");
+        async function checkAuth() {
+            try {
+                const res = await axios.post(`${API_URL}/isAuth`);
+                console.log(res);
+                if (res.status === 200) {
+                    navigate("/main");
+                } else {
+                    console.log(res.status);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        checkAuth();
+    }, []);
     const sendRegister = async () => {
         const res = await axios.post(`${API_URL}/register`, {
             userName: userName,
@@ -28,8 +45,9 @@ export const Welcome = () => {
             password: password,
         });
         if (res.status === 200) {
-            navigate("/main");
+            console.log(res);
             setMessage(res.data.message);
+            navigate("/main");
         } else {
             setMessage(res.data.message);
         }
