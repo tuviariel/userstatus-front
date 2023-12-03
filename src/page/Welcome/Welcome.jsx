@@ -5,11 +5,12 @@ import { useNavigate } from "react-router";
 const API_URL = config["API_URL"];
 export const Welcome = () => {
     const navigate = useNavigate();
-    const [login, setLogin] = useState(false);
+    const [login, setLogin] = useState(true);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [message, setMessage] = useState("");
+    const [rerender, setRerender] = useState(false);
     useEffect(() => {
         console.log("in effect");
         async function checkAuth() {
@@ -17,7 +18,7 @@ export const Welcome = () => {
                 const res = await axios.post(`${API_URL}/isAuth`);
                 console.log(res);
                 if (res.status === 200) {
-                    navigate("/main");
+                    // navigate("/main");
                 } else {
                     console.log(res.status);
                 }
@@ -26,14 +27,15 @@ export const Welcome = () => {
             }
         }
         checkAuth();
-    }, []);
+    }, [rerender]);
     const sendRegister = async () => {
         const res = await axios.post(`${API_URL}/register`, {
             userName: userName,
             password: password,
         });
+        console.log(res);
         if (res.status === 200) {
-            navigate("/main");
+            // navigate("/main");
             setMessage(res.data.message);
         } else {
             setMessage(res.data.message);
@@ -44,17 +46,24 @@ export const Welcome = () => {
             userName: userName,
             password: password,
         });
+        console.log(res);
         if (res.status === 200) {
-            console.log(res);
             setMessage(res.data.message);
-            navigate("/main");
+            // navigate("/main");
         } else {
             setMessage(res.data.message);
         }
     };
+
     return (
         <div className="App-header">
-            <h2 className="">Welcome</h2>
+            <h2
+                className=""
+                onClick={() => {
+                    setRerender(!rerender);
+                }}>
+                Welcome
+            </h2>
             <h3>{login ? "Login" : "Register"}</h3>
             <h5>
                 {login ? "Haven't registered yet" : "All ready registered"}?...
