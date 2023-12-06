@@ -13,20 +13,20 @@ export const Welcome = () => {
     const [rerender, setRerender] = useState(false);
     useEffect(() => {
         console.log("in effect");
-        async function checkAuth() {
-            try {
-                const res = await axios.post(`${API_URL}/isAuth`);
-                console.log(res);
-                if (res.status === 200) {
-                    // navigate("/main");
-                } else {
-                    console.log(res.status);
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        checkAuth();
+        // async function checkAuth() {
+        //     try {
+        //         const res = await axios.post(`${API_URL}/isAuth`);
+        //         console.log(res);
+        //         if (res.status === 200) {
+        //             // navigate("/main");
+        //         } else {
+        //             console.log(res.status);
+        //         }
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+        // checkAuth();
     }, [rerender]);
     const sendRegister = async () => {
         const res = await axios.post(`${API_URL}/register`, {
@@ -35,7 +35,7 @@ export const Welcome = () => {
         });
         console.log(res);
         if (res.status === 200) {
-            // navigate("/main");
+            navigate("/main");
             setMessage(res.data.message);
         } else {
             setMessage(res.data.message);
@@ -49,7 +49,7 @@ export const Welcome = () => {
         console.log(res);
         if (res.status === 200) {
             setMessage(res.data.message);
-            // navigate("/main");
+            navigate("/main");
         } else {
             setMessage(res.data.message);
         }
