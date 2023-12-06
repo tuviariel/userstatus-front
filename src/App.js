@@ -5,7 +5,7 @@ import './App.css';
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="text-center">
       <Router>
         <Routes>
           <Route path="/" element={<Welcome/>} />

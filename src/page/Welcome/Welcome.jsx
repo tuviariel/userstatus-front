@@ -46,10 +46,10 @@ export const Welcome = () => {
             userName: userName,
             password: password,
         });
-        console.log(res);
+        console.log(res.data.user);
         if (res.status === 200) {
             setMessage(res.data.message);
-            navigate("/main");
+            navigate("/main", { state: res.data.user });
         } else {
             setMessage(res.data.message);
         }

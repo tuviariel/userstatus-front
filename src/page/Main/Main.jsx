@@ -1,15 +1,21 @@
 import axios from "axios";
 import config from "../../config";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import BaseTable, { Column } from "react-base-table";
 import "react-base-table/styles.css";
+import moment from "moment";
 const API_URL = config["API_URL"];
 
 export const Main = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log(location);
+    const [user, setUser] = useState(location.state);
     const [usersList, setUsersList] = useState([]);
     const [page, setPage] = useState(1);
+    const [status, setStatus] = useState("Working");
+    const [message, setMessage] = useState("");
     const tableRef = useRef(null);
     useEffect(() => {
         // console.log(Date.now());
@@ -37,8 +43,12 @@ export const Main = () => {
         try {
             const data = await axios.get(`${API_URL}/users?page=${page}`);
             if (data) {
+                console.log(data.data.users);
+                const list = data.data.users.map((user) => {
+                    return { ...user, ts: moment(user.ts).format("HH:mm:ss DD-MM-YYYY") };
+                });
                 setUsersList((prevList) => {
-                    return prevList.concat(data.data.users);
+                    return prevList.concat(list);
                 });
             }
         } catch (err) {
@@ -55,18 +65,33 @@ export const Main = () => {
     //         // setMessage(res.data.message);
     //     }
     // };
-
+    const updateStatus = async () => {
+        try {
+            const id = user._id;
+            const res = await axios.post(`${API_URL}/status/${id}`, { status: status });
+            console.log(res.data);
+            if (res.status === 200) {
+                setUser(res.data);
+            } else {
+                setMessage(res.data.message);
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setTimeout(() => {
+                setMessage("");
+            }, 5000);
+        }
+    };
     const handleScroll = (e) => {
         const tableElement = tableRef.current;
         const isAtBottom =
-            e.scrollTop + tableElement.props.height >
-            tableElement.props.data.length * tableElement.props.rowHeight;
-
+            e.scrollTop + tableElement?.props?.height >
+            tableElement?.props?.data?.length * tableElement?.props?.rowHeight;
         // console.log(tableElement.props.data.length * tableElement.props.rowHeight);
         // console.log(e.scrollTop + tableElement.props.height);
         // console.log(isAtBottom);
         // Check if the user has scrolled to the bottom
-
         if (isAtBottom) {
             setPage(page + 1);
             console.log("hit bottom");
@@ -74,22 +99,89 @@ export const Main = () => {
     };
 
     return (
-        <div className="App-header">
-            <div className="row">
-                <h4>Status:</h4>
-                <select></select>
+        <div className="container mt-3">
+            <div className="text-start">
+                <h5>My Status:</h5>
             </div>
+            <div className="d-flex">
+                <div className="col-6">
+                    <p className="text-start">Name: {user?.userName}</p>
+                    <p className="text-start">Status: {user?.status}</p>
+                    <p className="text-start">
+                        Changed: {moment(user?.ts).format("HH:mm:ss DD-MM-YYYY")}
+                    </p>
+                </div>
+                <div className="col-6 d-flex flex-column">
+                    <select
+                        className="form-select mb-3 mt-3"
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                        }}>
+                        <option value="Working">Working</option>
+                        <option value="Vacation">Vacation</option>
+                        <option value="Sickness">Sickness</option>
+                    </select>
+                    <button
+                        className="btn btn-primary ml-auto"
+                        onClick={() => {
+                            updateStatus();
+                        }}
+                        disabled={user.status === status}
+                        title={
+                            user.status === status
+                                ? "can't change to you current status"
+                                : "change your status to " + status
+                        }>
+                        Update My Status
+                    </button>
+                </div>
+            </div>
+            <div className="">{message}</div>
             <hr />
-            <BaseTable
-                data={usersList}
-                width={600}
-                height={600}
-                ref={tableRef}
-                onScroll={(e) => handleScroll(e)}>
-                <Column key="col0" dataKey="userName" width={200} title="Name" align="center" />
-                <Column key="col1" dataKey="status" width={200} title="Status" align="center" />
-                <Column key="col2" dataKey="ts" width={200} title="Last Updated" align="center" />
-            </BaseTable>
+            <h5 className="">All user Statuses:</h5>
+            <div className="d-flex justify-content-center">
+                <BaseTable
+                    data={usersList}
+                    width={600}
+                    height={500}
+                    ref={tableRef}
+                    onScroll={(e) => handleScroll(e)}>
+                    <Column
+                        key="0"
+                        dataKey="userName"
+                        width={200}
+                        title="Name"
+                        align="center"
+                        className="border border-1"
+                        headerClassName="border border-2"
+                    />
+                    <Column
+                        key="1"
+                        dataKey="status"
+                        width={200}
+                        title="Status"
+                        align="center"
+                        className="border border-1"
+                        headerClassName="border border-2"
+                    />
+                    <Column
+                        key="2"
+                        dataKey="ts"
+                        width={200}
+                        title="Last Updated"
+                        align="center"
+                        className="border border-1"
+                        headerClassName="border border-2"
+                    />
+                    {/* <Column
+                    key="__key__"
+                    dataKey="__key__"
+                    width={0}
+                    cellRenderer={({ rowIndex }) => rowIndex}
+                /> */}
+                </BaseTable>
+            </div>
         </div>
     );
 };
