@@ -170,9 +170,9 @@ export const Main = () => {
                         onClick={() => {
                             updateStatus();
                         }}
-                        disabled={user.status === status}
+                        disabled={user?.status === status}
                         title={
-                            user.status === status
+                            user?.status === status
                                 ? "can't change to you current status"
                                 : "change your status to " + status
                         }>
@@ -211,7 +211,7 @@ export const Main = () => {
                 <BaseTable
                     data={usersList}
                     width={600}
-                    height={500}
+                    height={470}
                     ref={tableRef}
                     onScroll={(e) => handleScroll(e)}>
                     <Column
