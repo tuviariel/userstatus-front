@@ -10,9 +10,8 @@ export const Welcome = () => {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [message, setMessage] = useState("");
-    const [rerender, setRerender] = useState(false);
     useEffect(() => {
-        console.log("in effect");
+        // console.log("in effect");
         // async function checkAuth() {
         //     try {
         //         const res = await axios.post(`${API_URL}/isAuth`);
@@ -27,7 +26,7 @@ export const Welcome = () => {
         //     }
         // }
         // checkAuth();
-    }, [rerender]);
+    }, []);
     const sendRegister = async () => {
         const res = await axios.post(`${API_URL}/register`, {
             userName: userName,
@@ -56,95 +55,104 @@ export const Welcome = () => {
     };
 
     return (
-        <div className="App-header">
-            <h2
-                className=""
-                onClick={() => {
-                    setRerender(!rerender);
-                }}>
-                Welcome
-            </h2>
-            <h3>{login ? "Login" : "Register"}</h3>
-            <h5>
-                {login ? "Haven't registered yet" : "All ready registered"}?...
-                <span
-                    className=""
-                    onClick={() => {
-                        setLogin((login) => {
-                            return !login;
-                        });
-                        setMessage("");
-                    }}>
-                    {login ? " Register" : " Login"}
-                </span>
-                .
-            </h5>
-            <input
-                type="text"
-                onChange={(e) => {
-                    setUserName(e.target.value);
-                }}
-                value={userName}
-                placeholder="Enter your name..."
-            />
-            <input
-                type="password"
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-                value={password}
-                placeholder="Enter your password..."
-            />
-            {!login && (
+        <div className="container mt-5">
+            <p className="display-6">Welcome</p>
+            <h3 className="text-decoration-underline">{login ? "Login" : "Register"}</h3>
+            <br />
+            <div className="row justify-content-center">
                 <input
+                    className="form-control col-5 mb-3"
+                    type="text"
+                    onChange={(e) => {
+                        setUserName(e.target.value);
+                    }}
+                    value={userName}
+                    placeholder="Enter your name..."
+                />
+            </div>
+            <div className="row justify-content-center">
+                <input
+                    className="form-control col-5 mb-3"
                     type="password"
                     onChange={(e) => {
-                        setPasswordConfirm(e.target.value);
+                        setPassword(e.target.value);
                     }}
-                    value={passwordConfirm}
-                    placeholder="Confirm your password..."
+                    value={password}
+                    placeholder="Enter your password..."
                 />
-            )}
-            {login ? (
-                <button
-                    disabled={userName === "" || password === ""}
-                    title={
-                        userName === ""
-                            ? "You must type in your name"
-                            : password === ""
-                            ? "You must choose a password"
-                            : "Login"
-                    }
-                    onClick={() => {
-                        sendLogin();
-                    }}>
-                    Log In
-                </button>
-            ) : (
-                <button
-                    disabled={
-                        userName === "" ||
-                        password === "" ||
-                        passwordConfirm === "" ||
-                        password !== passwordConfirm
-                    }
-                    title={
-                        userName === ""
-                            ? "You must type in you name"
-                            : password === ""
-                            ? "You must choose a password"
-                            : passwordConfirm === ""
-                            ? "You must confirm your password"
-                            : password !== passwordConfirm
-                            ? "Password is not confirmed properly"
-                            : "Register"
-                    }
-                    onClick={() => {
-                        sendRegister();
-                    }}>
-                    Sign Up
-                </button>
-            )}
+            </div>
+            <div className="row justify-content-center">
+                {!login && (
+                    <input
+                        className="form-control col-5 mb-3"
+                        type="password"
+                        onChange={(e) => {
+                            setPasswordConfirm(e.target.value);
+                        }}
+                        value={passwordConfirm}
+                        placeholder="Confirm your password..."
+                    />
+                )}
+            </div>
+            <div className="row justify-content-center">
+                {login ? (
+                    <button
+                        className="btn btn-primary col-4 mb-4"
+                        disabled={userName === "" || password === ""}
+                        title={
+                            userName === ""
+                                ? "You must type in your name"
+                                : password === ""
+                                ? "You must choose a password"
+                                : "Login"
+                        }
+                        onClick={() => {
+                            sendLogin();
+                        }}>
+                        Log In
+                    </button>
+                ) : (
+                    <button
+                        className="btn btn-primary col-4 mb-4"
+                        disabled={
+                            userName === "" ||
+                            password === "" ||
+                            passwordConfirm === "" ||
+                            password !== passwordConfirm
+                        }
+                        title={
+                            userName === ""
+                                ? "You must type in you name"
+                                : password === ""
+                                ? "You must choose a password"
+                                : passwordConfirm === ""
+                                ? "You must confirm your password"
+                                : password !== passwordConfirm
+                                ? "Password is not confirmed properly"
+                                : "Register"
+                        }
+                        onClick={() => {
+                            sendRegister();
+                        }}>
+                        Sign Up
+                    </button>
+                )}
+                <h6>
+                    {login ? "Haven't registered yet?... " : "All ready registered?... "}
+                    <a
+                        role="button"
+                        className="text-decoration-underline"
+                        onClick={() => {
+                            setLogin((login) => {
+                                return !login;
+                            });
+                            setMessage("");
+                        }}>
+                        {login ? " Register" : " Login"}
+                    </a>
+                    .
+                </h6>
+            </div>
             <div>{message}</div>
         </div>
     );
